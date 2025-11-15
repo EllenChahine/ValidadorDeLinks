@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Validador de Links – Segurança Bancária</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 40px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #93c5fd;
+        }
+        .box {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: auto;
+            border: 1px solid #334155;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        button {
+            margin-top: 15px;
+            padding: 12px 16px;
+            background: #2563eb;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background: #1e40af;
+        }
+        .result-ok {
+            margin-top: 20px;
+            padding: 12px;
+            color: #22c55e;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .result-bad {
+            margin-top: 20px;
+            padding: 12px;
+            color: #ef4444;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🔒 Validador de Links de Bancos</h1>
+
+<div class="box">
+    <p>Insira um link suspeito para verificar se ele é realmente de um banco oficial.</p>
+
+    <input type="text" id="urlInput" placeholder="Ex: https://itau.com.br">
+
+    <button onclick="validateLink()">Validar link</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function ensureHttps(url) {
+    url = url.trim();
+    if (!/^https?:\/\//i.test(url)) {
+        url = "https://" + url;
+    }
+    return url;
+}
+
+async function validateLink() {
+    const input = document.getElementById("urlInput").value;
+    const cleaned = ensureHttps(input);
+
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "";
+    
+    try {
+        const response = await fetch(
+            `/api/certs/validate?url=${encodeURIComponent(cleaned)}`
+        );
+
+        const data = await response.json();
+
+        if (data.trusted === true) {
+            resultDiv.innerHTML = `<div class="result-ok">✅ LINK SEGURO</div>`;
+        } else {
+            resultDiv.innerHTML = `<div class="result-bad">❌ LINK NÃO CONFIÁVEL</div>`;
+        }
+
+    } catch (e) {
+        resultDiv.innerHTML = `<div class="result-bad">❌ Erro ao validar</div>`;
+    }
+}
+</script>
+
+</body>
+</html>

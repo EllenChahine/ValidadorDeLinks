@@ -1,0 +1,7 @@
+com\linkscanner\service\CertificateFetcher.class
+com\linkscanner\model\BankCertificate.class
+com\linkscanner\service\CertificateFetcher$1.class
+com\linkscanner\service\CertificateFetcher$FetchedCert.class
+com\linkscanner\LinkscannerApplication.class
+com\linkscanner\repository\BankCertificateRepository.class
+com\linkscanner\controller\CertController.class
